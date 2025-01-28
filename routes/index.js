@@ -25,6 +25,7 @@ const Trip = require("../models/trips");
 
         if(!req.body.departure || !req.body.arrival || !req.body.date) {
             res.json({ result: false, message: "Trip not found"});
+            console.log('nothing')
         }
        
         Trip.find({ departure: { $regex: new RegExp(req.body.departure, 'i') }, 
