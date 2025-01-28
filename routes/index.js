@@ -14,7 +14,7 @@ const Trip = require("../models/trips");
 
 // This is made to search a trip with a departue arrival and date$
 
-    router.post("/trips", function (req, res) {
+    router.post("/", function (req, res) {
         let departureValue = req.body.departure
         let arrivalValue = req.body.arrival
         let dateValue = req.body.date
@@ -38,7 +38,7 @@ const Trip = require("../models/trips");
                 if (trips.length === 0) {
                     res.json({ result: false, message: "Trip not found"});
                 } else {
-                    res.json({ result: true,  allTrips : trips});
+                    res.json({ result: true, trips});
                 }
             })
     });
