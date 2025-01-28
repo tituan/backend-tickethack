@@ -3,7 +3,6 @@ var router = express.Router();
 require("../models/connection");
 require("../models/trips");
 const moment = require("moment");
-const fetch = require('node-fetch');
 
 const Trip = require("../models/trips");
 
@@ -13,28 +12,37 @@ const Trip = require("../models/trips");
 // });
 
 
-// This is made to search a trip with a departue arrival and date
-router.get("/trips", function (req, res) {
-    let departureValue = req.body.departure
-    let arrivalValue = req.body.arrival
-    let dateValue = req.body.date
+// This is made to search a trip with a departue arrival and date$
 
-    console.log(departureValue)
-    console.log(arrivalValue)
-    console.log(dateValue)
+    router.post("/trips", function (req, res) {
+        let departureValue = req.body.departure
+        let arrivalValue = req.body.arrival
+        let dateValue = req.body.date
+    
+        console.log(departureValue)
+        console.log(arrivalValue)
+        console.log(dateValue)
 
-   
-    Trip.find({ departure: { $regex: new RegExp(departureValue, 'i') }, 
-                arrival: { $regex: new RegExp(arrivalValue, 'i') }, 
-                 date: { $gte: dateValue, $lte: dateValue } })
-        .then((trips) => {
-            if (departureValue && arrivalValue && dateValue) {
-                res.json({ allTrips : trips});
-            } else {
-                res.json({ message: "Aucun voyage trouvé correspondant aux critères fournis."})
-            }
-        })
+        if(!req.body.departure || !req.body.arrival || !req.body.date) {
+            res.json({ result: false, message: "Trip not found"});
+        }
+       
+        Trip.find({ departure: { $regex: new RegExp(req.body.departure, 'i') }, 
+                    arrival: { $regex: new RegExp(req.body.arrival, 'i') }, 
+                    date: { 
+                        $gte: moment.utc(req.body.date).startOf("day").toDate(), 
+                        $lt: moment.utc(req.body.date).endOf("day").toDate() 
+                        } 
+                    })
+            .then((trips) => {
+                if (trips.length === 0) {
+                    res.json({ result: false, message: "Trip not found"});
+                } else {
+                    res.json({ result: true,  allTrips : trips});
+                }
+            })
     });
 
-    // 2025-01-28T18:54:38.908Z
+
+
 module.exports = router;
