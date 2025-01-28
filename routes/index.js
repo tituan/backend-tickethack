@@ -24,34 +24,17 @@ router.get("/trips", function (req, res) {
     console.log(dateValue)
 
    
-    Trip.find({
-        types: {
-            $elemMatch: {
-                departure: { $regex: departureValue, $options: "i" }, 
-                arrival: { $regex: arrivalValue, $options: "i" },     
-                date: { $regex: dateValue }                        
-            }
-        }
-    })
-    // departure: { $regex: "^Par", $options: "i" },
-    //   arrival: { $in: ["London", "Rome"] },
-    //   date: { $gte: "2025-01-01", $lte: "2025-12-31" } 
+    Trip.find({ departure: { $regex: new RegExp(departureValue, 'i') }, 
+                arrival: { $regex: new RegExp(arrivalValue, 'i') }, 
+                 date: { $gte: dateValue, $lte: dateValue } })
         .then((trips) => {
-            console.log(trips)
-            res.json({ trips: trips });
-            // const matchingTrips = trips.filter(
-            // (dataTrip) =>
-            //     dataTrip.departure.toLowerCase() === departureValue.toLowerCase() &&
-            //     dataTrip.arrival.toLowerCase() === arrivalValue.toLowerCase() &&
-            //     moment(dataTrip.date).format("YYYY-MM-DD") === moment(dateValue).format("YYYY-MM-DD")
-            // )
-            // if (matchingTrips.length > 0) {
-            //     res.json({ allTrips: matchingTrips });
-            // } else {
-            //     res.json({ message: "Aucun voyage trouvé correspondant aux critères fournis."})
-            // }
+            if (departureValue && arrivalValue && dateValue) {
+                res.json({ allTrips : trips});
+            } else {
+                res.json({ message: "Aucun voyage trouvé correspondant aux critères fournis."})
+            }
         })
     });
 
-
+    // 2025-01-28T18:54:38.908Z
 module.exports = router;
