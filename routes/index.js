@@ -23,7 +23,7 @@ router.get("/trips", function (req, res) {
             (dataTrip) =>
                 dataTrip.departure.toLowerCase() === departureValue.toLowerCase() &&
                 dataTrip.arrival.toLowerCase() === arrivalValue.toLowerCase() &&
-                moment(dataTrip.date).format("YYYY-MM-DD HH:mm:ss") === moment(dateValue).format("YYYY-MM-DD HH:mm:ss")
+                moment(dataTrip.date).format("YYYY-MM-DD") === moment(dateValue).format("YYYY-MM-DD")
             )
             // console.log(matchingTrips.length)
 
