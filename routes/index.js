@@ -1,10 +1,14 @@
 var express = require("express");
 var router = express.Router();
+
 require("../models/connection");
 require("../models/trips");
+require("../models/cart");
+
 const moment = require("moment");
 
 const Trip = require("../models/trips");
+const Cart = require("../models/cart");
 
 /* GET home page. */
 // router.get("/", function (req, res, next) {
@@ -25,7 +29,6 @@ const Trip = require("../models/trips");
 
         if(!req.body.departure || !req.body.arrival || !req.body.date) {
             res.json({ result: false, message: "Trip not found"});
-            console.log('nothing')
         }
        
         Trip.find({ departure: { $regex: new RegExp(req.body.departure, 'i') }, 
@@ -44,6 +47,39 @@ const Trip = require("../models/trips");
             })
     });
 
-
+    router.post("/cart", function (req, res) {
+        
+        console.log(req.body.date)
+        
+        Cart.find({ 
+                departure: req.body.departure,
+                // arrival: req.body.arrival,
+                // date: req.body.date 
+                })
+        .then(data => {
+            console.log(data)
+            // console.log(req.body.departure)
+            // console.log(req.body.arrival)
+            // console.log(req.body.date)
+            // if (data) {
+            //     res.json({ result: false, message: "Trip exist"});
+            // } else {
+                const newCart = new Cart ({
+                    departure: req.body.departure,
+                    arrival: req.body.arrival,
+                    date: req.body.date,
+                    price: req.body.price,
+                });
+        
+                newCart.save().then( newTrip => { 
+                    res.json({ result: true, newTrip});
+                });
+                
+            // }
+        })
+        
+           
+        // res.json({ result: true });
+    });
 
 module.exports = router;
