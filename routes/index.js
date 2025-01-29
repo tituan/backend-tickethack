@@ -38,11 +38,6 @@ router.post("/", function (req, res) {
             $lt: moment.utc(req.body.date).endOf("day").toDate(),
         },
     }).then((trips) => {
-        if (trips.length === 0) {
-            res.json({ result: false, message: "Trip not found" });
-        } else {
-            res.json({ result: true, trips });
-        }
 
         Trip.find({
             departure: { $regex: new RegExp(req.body.departure, "i") },
@@ -57,7 +52,6 @@ router.post("/", function (req, res) {
             } else {
                 let dataTrip = [];
                 for (let i = 0; i < trips.length; i++) {
-                    console.log(trips[i]._id);
                     const newObj = {
                         id: trips[i]._id,
                         departure: trips[i].departure,
