@@ -10,11 +10,14 @@ const Cart = require("../models/cart");
 
 
 /* GET home page. */
-router.get("/carts", (req, res) => {
+router.get("/", (req, res) => {
     Cart.find()
 	.populate('tripId')
 	.then(data => {
-		res.json({ cartTrip : data });
+		// for (const element of data) {
+			// console.log(element)
+			res.json({data});
+		// }
 	});
 });
 
