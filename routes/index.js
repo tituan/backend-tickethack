@@ -68,14 +68,16 @@ router.post("/", function (req, res) {
 });
 
 router.post("/cart", function (req, res) {
-    Trip.findById(req.body.tripId).then((data) => {
-        console.log(data);
+    Trip.findById(req.body.tripid).then((data) => {
+
+        console.log(data)
+
         const newCart = new Cart({
             tripId: data._id,
         });
 
         newCart.save().then((data) => {
-            res.json({ result: true });
+            res.json({ result: true, data });
         });
     });
 });
